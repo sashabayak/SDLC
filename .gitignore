@@ -1,0 +1,20 @@
+# Временные файлы
+*.log
+*.tmp
+*~
+
+# Папки сборки
+build/
+dist/
+out/
+bin/
+obj/
+
+# IDE
+.idea/
+.vscode/
+*.user
+
+# ОС
+.DS_Store
+Thumbs.db
