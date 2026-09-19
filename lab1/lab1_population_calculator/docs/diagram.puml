@@ -1,0 +1,82 @@
+@startuml
+skinparam classAttributeIconSize 0
+skinparam linetype ortho
+skinparam nodesep 60
+skinparam ranksep 80
+skinparam class {
+    BackgroundColor #FEFECE
+    BorderColor #A80036
+    ArrowColor #A80036
+}
+
+class Main {
+    + {static} void main(String[] args)
+}
+
+class MainView {
+    - PopulationController controller
+    - PopulationModel model
+    - JLabel lblDate
+    - JLabel lblPopulation
+    + void onModelChanged()
+}
+
+class PopulationController {
+    - PopulationModel model
+    - MainView view
+    - InputDialog inputDialog
+    + void setView(MainView view)
+    + void openInputDialog(JFrame parent)
+    + void processInput(String, String, String)
+    - void showError(String)
+}
+
+class PopulationModel {
+    - {static} double START_POPULATION
+    - {static} int START_YEAR
+    - {static} double ANNUAL_GROWTH_RATE
+    - int day
+    - int month
+    - int year
+    - long calculatedPopulation
+    - List<ModelListener> listeners
+    + void addListener(ModelListener)
+    + void setData(int, int, int)
+    + int getDay()
+    + int getMonth()
+    + int getYear()
+    + long getCalculatedPopulation()
+    - void calculatePopulation()
+    - void notifyListeners()
+}
+
+interface ModelListener {
+    + void onModelChanged()
+}
+
+class InputDialog {
+    - JTextField txtDay
+    - JTextField txtMonth
+    - JTextField txtYear
+    + void setValues(int, int, int)
+}
+
+'
+
+Main ..> MainView : creates
+Main ..> PopulationController : creates
+Main ..> PopulationModel : creates
+
+MainView --> PopulationController : requests input
+MainView --> PopulationModel : reads state
+MainView ..|> ModelListener : implements
+
+PopulationController --> PopulationModel : updates
+PopulationController --> InputDialog : manages
+
+PopulationModel --> ModelListener : defines (inner interface)
+PopulationModel ..> ModelListener : notifies
+
+InputDialog --> PopulationController : calls
+
+@enduml
